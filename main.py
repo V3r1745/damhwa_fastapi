@@ -14,7 +14,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["*"],
+    allow_origins = ["http://13.125.14.153"],
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
@@ -47,7 +47,7 @@ async def chat_gpt(body: Chat):
       "content": "답변을 할 때 '인공지능으로서'와 같은 딱딱하고 '감정'이라는 것이 없는 것 처럼 대답하지마"
   }]
   messages.extend(map(lambda v: {"role": "user" if v.get("user") else "assistant", "content": v.get("chat")}, dict(body).get("chat")))
-  completion = openai.ChatCompletion.create(model = "gpt-4", messages = messages)
+  completion = openai.ChatCompletion.create(model = os.getenv("AI_MODEL"), messages = messages)
   print(completion.choices[0].get("message").get("content").strip())
   return {"result": completion.choices[0].get("message").get("content").strip()}
 
